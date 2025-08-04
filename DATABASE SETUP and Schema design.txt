@@ -1,0 +1,94 @@
+SQL*Plus: Release 10.2.0.1.0 - Production on Mon A
+
+Copyright (c) 1982, 2005, Oracle.  All rights rese
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.
+With the Partitioning, OLAP and Data Mining option
+
+SQL> SET PAGES 1000 LINES 1000
+SQL> ;
+SP2-0223: No lines in SQL buffer.
+SQL> SET LINES 1000 PAGES 1000;
+SQL> SHOW USER
+USER is "SCOTT"
+SQL> SELECT * FROM TABS;
+
+TABLE_NAME                     TABLESPACE_NAME          
+------------------------------ -------------------
+DEPT                           USERS                    
+EMP                            USERS                    
+BONUS                          USERS                    
+SALGRADE                       USERS                    
+AUTHOR                         USERS                    
+
+SQL> SELECT * FROM AUTHOR;
+
+no rows selected
+
+SQL> INSERT INTO AUTHOR(author_id, name)
+  2  VALUES (1, 'J.K. Rowling');
+
+1 row created.
+
+SQL> select * from author;
+
+ AUTHOR_ID NAME
+---------- ---------------------------------------
+         1 J.K. Rowling
+
+SQL> CREATE TABLE Categories (
+  2  category_id INT PRIMARY KEY,
+  3  name VARCHAR(50) NOT NULL UNIQUE);
+
+Table created.
+
+SQL> CREATE TABLE Books (
+  2      book_id NUMBER PRIMARY KEY,
+  3      title VARCHAR2(255),
+  4      isbn VARCHAR2(20) UNIQUE,
+  5      category_id NUMBER,
+  6      FOREIGN KEY (category_id) REFERENCES Categories(category_id)
+  7  );
+
+Table created.
+
+SQL>  CREATE TABLE BookAuthors (
+  2   book_id NUMBER,
+  3   author_id NUMBER,
+  4   PRIMARY KEY (book_id, author_id),
+  5   FOREIGN KEY (book_id) REFERENCES Books(book_id),
+  6   FOREIGN KEY (author_id) REFERENCES Author(author_id));
+
+Table created.
+
+SQL> CREATE TABLE Members (
+  2  member_id INT PRIMARY KEY,
+  3  name VARCHAR(100) NOT NULL,
+  4  email VARCHAR(100) UNIQUE,
+  5  join_date DATE DEFAULT CURRENT_DATE);
+
+Table created.
+
+SQL> CREATE TABLE Staff (
+  2  staff_id INT PRIMARY KEY,
+  3  name VARCHAR(50),
+  4  role VARCHAR(50));
+
+Table created.
+
+SQL> CREATE TABLE LOANS(
+  2  loan_id INT PRIMARY KEY,
+  3  book_id INT,
+  4  member_id INT,
+  5  staff_id INT,
+  6  issue_date DATE NOT NULL,
+  7  return_date DATE,
+  8  FOREIGN KEY (book_id) REFERENCES Books(book_id),
+  9  FOREIGN KEY (member_id) REFERENCES Members(member_id),
+ 10  FOREIGN KEY (staff_id) REFERENCES Staff(staff_id));
+
+Table created.
+
+SQL> 
