@@ -1,0 +1,234 @@
+#TABLES CREATED......
+
+SQL> set pages 1000 lines 1000;
+SQL> select * from tabs;
+
+TABLE_NAME                     TABLESPACE_NAME                CLUSTER_NAME                   IOT_NAME                       STATUS     PCT_FREE   PC
+------------------------------ ------------------------------ ------------------------------ -------
+DEPT                           USERS                                                                                        VALID            10                     1        255        
+EMP                            USERS                                                                                        VALID            10                     1        255        
+BONUS                          USERS                                                                                        VALID            10                     1        255        
+SALGRADE                       USERS                                                                                        VALID            10                     1        255        
+AUTHOR                         USERS                                                                                        VALID            10                     1        255        
+CATEGORIES                     USERS                                                                                        VALID            10                     1        255        
+BOOKS                          USERS                                                                                        VALID            10                     1        255        
+BOOKAUTHORS                    USERS                                                                                        VALID            10                     1        255        
+MEMBERS                        USERS                                                                                        VALID            10                     1        255        
+STAFF                          USERS                                                                                        VALID            10                     1        255        
+LOANS                          USERS                                                                                        VALID            10                     1        255        
+
+11 rows selected.
+
+#INSERTION IN CREATED TABLES(CATEGORIES,BOOKS,AUTHOR)
+
+
+SQL> select * from Categories;
+
+no rows selected
+
+SQL> INSERT INTO Categories (category_id, name) VALUES (1, 'Fiction');
+
+1 row created.
+
+SQL> INSERT INTO Categories (category_id, name) VALUES (2, 'Science');
+
+1 row created.
+
+SQL> select * from Categories;
+
+CATEGORY_ID NAME
+----------- --------------------------------------------------
+          1 Fiction
+          2 Science
+SQL> select * from AUTHOR;
+
+ AUTHOR_ID NAME
+---------- -----------------------------------------------------------------------------------------
+         1 J.K. Rowling
+
+SQL> INSERT INTO Author  (author_id, name) VALUES (2, 'Stephen Hawking');
+
+1 row created.
+
+SQL> select * from author;
+
+ AUTHOR_ID NAME
+---------- -----------------------------------------------------------------------------------------
+         1 J.K. Rowling
+         2 Stephen Hawking
+
+SQL> select * from BOOKS;
+
+no rows selected
+
+SQL> INSERT INTO Books (book_id, title, isbn, category_id)
+  2  VALUES (1, 'Harry Potter', '9780747532743', 1);
+
+1 row created.
+
+SQL> INSERT INTO Books (book_id, title, isbn, category_id)
+  2  VALUES (2, 'A Brief History of Time', '9780553380163', 2);
+
+1 row created.
+
+SQL> INSERT INTO Books (book_id, title, isbn, category_id)
+  2  VALUES (3, 'Mystery Book', '0000000000000', NULL);
+
+1 row created.
+
+SQL> select * from BOOKS;
+
+   BOOK_ID TITLE                                                                                                                                        
+---------- -----------------------------------------------------------------------------------------
+         1 Harry Potter                                                                                                                                 
+         2 A Brief History of Time                                                                                                                      
+         3 Mystery Book                                                                                                                                 
+
+SQL> select * from BookAuthors;
+
+no rows selected
+
+SQL> INSERT INTO BookAuthors (book_id, author_id) VALUES (1, 1);
+
+1 row created.
+
+SQL> INSERT INTO BookAuthors (book_id, author_id) VALUES (2, 2);
+
+1 row created.
+
+SQL> select * from BookAuthors;
+
+   BOOK_ID  AUTHOR_ID
+---------- ----------
+         1          1
+         2          2
+
+SQL> select * from MEMBERS;
+
+no rows selected
+
+SQL> INSERT INTO Members (member_id, name, email, join_date)
+  2  VALUES (1, 'Alice', 'alice@example.com', DATE '2024-01-01');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Members (member_id, name, email, join_date)
+  2  VALUES (2, 'Bob', NULL, DATE '2024-03-15');
+
+1 row created.
+
+SQL> select * from MEMBERS;
+
+ MEMBER_ID NAME                                                                                                 EMAIL                                   
+---------- -----------------------------------------------------------------------------------------
+         1 Alice                                                                                                alice@example.com                       
+         2 Bob                                                                                                                                          
+
+SQL> select * from STAFF;
+
+no rows selected
+
+SQL> INSERT INTO Staff (staff_id, name, role)
+  2  VALUES (1, 'Mr. John', 'Librarian');
+
+1 row created.
+
+SQL> select * from STAFF;
+
+  STAFF_ID NAME                                               ROLE
+---------- -------------------------------------------------- --------------------------------------
+         1 Mr. John                                           Librarian
+
+SQL> select * from LOANS;
+
+no rows selected
+
+SQL> INSERT INTO Loans (loan_id, book_id, member_id, staff_id, issue_date, return_date)
+  2  VALUES (1, 1, 1, 1, DATE '2024-05-01', DATE '2024-05-10');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Loans (loan_id, book_id, member_id, staff_id, issue_date, return_date)
+  2  VALUES (2, 2, 2, 1, DATE '2024-06-01', NULL);
+
+1 row created.
+
+SQL> select * from LOANS;
+
+   LOAN_ID    BOOK_ID  MEMBER_ID   STAFF_ID ISSUE_DAT RETURN_DA
+---------- ---------- ---------- ---------- --------- ---------
+         1          1          1          1 01-MAY-24 10-MAY-24
+         2          2          2          1 01-JUN-24
+
+
+
+
+#UPDATION IN TABLES
+
+
+SQL> UPDATE Books
+  2  SET category_id = 1
+  3  WHERE book_id = 3;
+
+1 row updated.
+
+SQL> select * from BOOKS;
+
+   BOOK_ID TITLE                                                                                                                                        
+---------- -----------------------------------------------------------------------------------------
+         1 Harry Potter                                                                                                                                 
+         2 A Brief History of Time                                                                                                                      
+         3 Mystery Book 
+
+SQL> SELECT * FROM CATEGORIES;
+
+CATEGORY_ID NAME
+----------- --------------------------------------------------
+          1 Fiction
+          2 Science
+
+SQL> UPDATE Members
+  2  SET email = 'bob@example.com'
+  3  WHERE member_id = 2;
+
+1 row updated.
+
+SQL> UPDATE Members
+  2  SET email = 'bob@example.com'
+  3  WHERE member_id = 2;
+
+1 row updated.
+
+SQL> SELCT * FROM MEMBERS;
+SP2-0734: unknown command beginning "SELCT * FR..." - rest of line ignored.
+SQL> SELECT * FROM MEMBERS;
+
+ MEMBER_ID NAME                                                                    EMAIL                                   
+---------- -----------------------------------------------------------------------------------------
+         1 Alice                                                                   alice@example.com                       
+         2 Bob                                                                     bob@example.com                         
+
+SQL> UPDATE Loans
+  2  SET return_date = DATE '2024-06-15'
+  3  WHERE loan_id = 2;
+
+1 row updated.
+
+SQL> DELETE FROM Books
+  2  WHERE book_id = 3;
+
+1 row deleted.
+
+SQL>  SELECT * FROM BOOKS;
+
+   BOOK_ID TITLE                                                                                                                                        
+---------- -----------------------------------------------------------------------------------------
+         1 Harry Potter                                                                                                                                 
+         2 A Brief History of Time                                                                                                                      
+
+SQL> DELETE FROM Members
+  2  WHERE member_id = 2;
+
+SQL>                                                                                                                                 
