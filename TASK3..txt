@@ -1,0 +1,209 @@
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.1.0 - Production
+With the Partitioning, OLAP and Data Mining options
+
+SQL> set pages 1000 lines1000;
+SQL> set * from tabs;
+SP2-0158: unknown SET option "*"
+SQL> SELECT * FROM TABS;
+
+TABLE_NAME                     TABLESPACE_NAME                CLUSTER_NAME                   IOT_NAM
+------------------------------ ------------------------------ ------------------------------ -------
+DEPT                           USERS                                                                    
+EMP                            USERS                                                                    
+BONUS                          USERS                                                                    
+SALGRADE                       USERS                                                                    
+AUTHOR                         USERS                                                                    
+CATEGORIES                     USERS                                                                    
+BOOKS                          USERS                                                                    
+BOOKAUTHORS                    USERS                                                                    
+MEMBERS                        USERS                                                                    
+STAFF                          USERS                                                                    
+LOANS                          USERS                                                                    
+
+11 rows selected.
+
+##SELECT ALL THE RECORDS FROM TABLE
+
+SQL> SELECT * FROM AUTHOR;
+
+ AUTHOR_ID NAME
+---------- -----------------------------------------------------
+         1 J.K. Rowling
+
+SQL> select * from Categories;
+
+CATEGORY_ID NAME
+----------- --------------------------------------------------
+          1 Fiction
+          2 Science
+SQL> select * from author;
+
+ AUTHOR_ID NAME
+---------- ---------------------------------------------------------------------------
+         2 Stephen Hawking
+         1 J.K. Rowling
+
+  BOOK_ID TITLE                                                                                        
+--------- ---------------------------------------------------------------------------------------
+        1 Harry Potter                                                                                 
+        2 A Brief History of Time                                                                      
+        3 Mystery Book                                                                                 
+
+SQL> 
+SQL> select * from BookAuthors;
+
+   BOOK_ID  AUTHOR_ID
+---------- ----------
+         1          1
+         2          2
+
+SQL> select * from MEMBERS;
+
+ MEMBER_ID NAME                                                                                         
+---------- -----------------------------------------------------------------------------------------
+         1 Alice                                                                                        
+         2 Bob                                                                                          
+
+SQL> select * from STAFF;
+
+  STAFF_ID NAME                                               ROLE
+---------- -------------------------------------------------- --------------------------------------
+         1 Mr. John                                           Librarian
+
+SQL> select * from LOANS;
+
+   LOAN_ID    BOOK_ID  MEMBER_ID   STAFF_ID ISSUE_DAT RETURN_DA
+---------- ---------- ---------- ---------- --------- ---------
+         1          1          1          1 01-MAY-24 10-MAY-24
+         2          2          2          1 01-JUN-24
+
+##Select Specific Columns
+
+SQL> SELECT title, isbn FROM Books;
+
+TITLE                                                                                                   
+----------------------------------------------------------------------------------------------------
+Harry Potter                                                                                            
+A Brief History of Time                                                                                 
+Mystery Book                                                                                            
+
+SQL> SELECT name, email FROM Members;
+
+NAME                                                                                    
+---------------------------------------------------------------------------------
+Alice                                                                                   
+Bob
+
+##USING WHERE CLAUSE TO FILTER DATA
+1)IN BOOK TABLE
+
+SQL> SELECT title FROM Books
+  2  WHERE category_id = 1;
+
+TITLE
+-------------------------------------------------------------------
+Harry Potter
+
+2)IM MEMEBERS TABLE
+SQL> SELECT * FROM Members
+  2  WHERE join_date > DATE '2024-01-01';
+
+ MEMBER_ID NAME                                                                 
+---------- ---------------------------------------------------------------------
+         2 Bob       
+
+##USING AND / OR CONDITION
+
+1)FROM BOOKS TABLE 
+
+SQL> SELECT title FROM Books
+  2  WHERE category_id = 1 AND isbn LIKE '978%';
+
+TITLE
+----------------------------------------------------------------------------------------------------
+Harry Potter
+
+2)LOANS NOT YET RETURNED
+
+SQL> SELECT * FROM Loans
+  2  WHERE return_date IS NULL OR issue_date > DATE '2024-06-01';
+
+   LOAN_ID    BOOK_ID  MEMBER_ID   STAFF_ID ISSUE_DAT RETURN_DA
+---------- ---------- ---------- ---------- --------- ---------
+         2          2          2          1 01-JUN-24
+
+##LIKE FOR PATTERN MATCHING
+
+SQL> SELECT * FROM Members
+  2  WHERE email LIKE '%@example.com';
+
+ MEMBER_ID NAME                                                                         
+---------- -----------------------------------------------------------------------
+         1 Alice   
+
+
+SQL> SELECT * FROM Author
+  2  WHERE name LIKE 'S%';
+
+ AUTHOR_ID NAME
+---------- -----------------------------------------------------------------------------
+         2 Stephen Hawking
+
+                                                                 
+##BETWEEN AND OR
+SQL> SELECT * FROM Members
+  2  WHERE join_date BETWEEN DATE '2024-01-01' AND DATE '2024-05-31';
+
+ MEMBER_ID NAME                                                                         
+---------- --------------------------------------------------------------------------
+         1 Alice                                                                        
+         2 Bob       
+
+SQL> SELECT * FROM Loans
+  2  WHERE (issue_date BETWEEN DATE '2024-05-01' AND DATE '2024-07-31')
+  3     OR return_date IS NULL;
+
+   LOAN_ID    BOOK_ID  MEMBER_ID   STAFF_ID ISSUE_DAT RETURN_DA
+---------- ---------- ---------- ---------- --------- ---------
+         1          1          1          1 01-MAY-24 10-MAY-24
+         2          2          2          1 01-JUN-24
+
+SQL> 
+
+                                                                   
+
+##ORDER BY for Sorting
+SQL> SELECT * FROM Books
+  2  ORDER BY title;
+
+   BOOK_ID TITLE                                                                                        
+---------- -----------------------------------------------------------------------------------------
+         2 A Brief History of Time                                                                      
+         1 Harry Potter                                                                                 
+         3 Mystery Book                                                                                 
+
+SQL> SELECT * FROM Loans
+  2  ORDER BY issue_date DESC;
+
+   LOAN_ID    BOOK_ID  MEMBER_ID   STAFF_ID ISSUE_DAT RETURN_DA
+---------- ---------- ---------- ---------- --------- ---------
+         2          2          2          1 01-JUN-24
+         1          1          1          1 01-MAY-24 10-MAY-24
+
+SQL> 
+
+##TO AVOID DUPLICATES
+SQL> SELECT DISTINCT category_id FROM Books;
+
+CATEGORY_ID
+-----------
+          1
+
+          2
+
+                                                           
+
+
+
+
