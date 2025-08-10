@@ -1,0 +1,115 @@
+##Use aggregate functions and grouping to summarize data
+
+SQL> set pages 1000 lines 1000;
+SQL> select * from tabs;
+
+TABLE_NAME                     TABLESPACE_NAME                CLUSTER_NAME                   IOT_NAME                       STATUS     PCT_FREE   PC
+------------------------------ ------------------------------ ------------------------------ -------
+DEPT                           USERS                                                                                        VALID            10                     1        255        
+EMP                            USERS                                                                                        VALID            10                     1        255        
+BONUS                          USERS                                                                                        VALID            10                     1        255        
+SALGRADE                       USERS                                                                                        VALID            10                     1        255        
+AUTHOR                         USERS                                                                                        VALID            10                     1        255        
+CATEGORIES                     USERS                                                                                        VALID            10                     1        255        
+BOOKS                          USERS                                                                                        VALID            10                     1        255        
+BOOKAUTHORS                    USERS                                                                                        VALID            10                     1        255        
+MEMBERS                        USERS                                                                                        VALID            10                     1        255        
+STAFF                          USERS                                                                                        VALID            10                     1        255        
+LOANS                          USERS                                                                                        VALID            10                     1        255        
+
+11 rows selected.
+
+SQL> SELECT COUNT(*) AS total_books
+  2  FROM Books;
+
+TOTAL_BOOKS
+-----------
+          2
+
+SQL> SELECT COUNT(category_id) AS books_with_category
+  2  FROM Books;
+
+BOOKS_WITH_CATEGORY
+-------------------
+                  1
+
+SQL> SELECT AVG(return_date - issue_date) AS avg_days_borrowed
+  2  FROM Loans
+  3  WHERE return_date IS NOT NULL;
+
+AVG_DAYS_BORROWED
+-----------------
+              5
+
+SQL> SELECT COUNT(*) AS total_loans
+  2  FROM Loans;
+
+TOTAL_LOANS
+-----------
+          1
+
+
+SQL> SELECT category_id, COUNT(*) AS total_books
+  2  FROM Books
+  3  GROUP BY category_id;
+
+CATEGORY_ID TOTAL_BOOKS
+----------- -----------
+                      1
+          2           1
+
+SQL> SELECT category_id, COUNT(*) AS total_books
+  2  FROM Books
+  3  GROUP BY category_id
+  4  HAVING COUNT(*) > 1;
+
+no rows selected
+
+SQL> SELECT author_id, COUNT(book_id) AS total_books
+  2  FROM BookAuthors
+  3  GROUP BY author_id
+  4  HAVING COUNT(book_id) > 1;
+
+no rows selected
+
+SQL> SELECT COUNT(DISTINCT author_id) AS total_authors
+  2  FROM BookAuthors;
+
+TOTAL_AUTHORS
+-------------
+            1
+
+SQL> SELECT ROUND(AVG(return_date - issue_date), 1) AS avg_days
+  2  FROM Loans
+  3  WHERE return_date IS NOT NULL;
+
+  AVG_DAYS
+----------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
