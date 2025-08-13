@@ -1,0 +1,74 @@
+##JOINS
+
+SQL joins are used to combine rows from two or more tables based on a related column between them. Joins are of following types:
+
+1)INNER JOIN – Returns only matching rows from both tables.
+
+2)LEFT JOIN – Returns all rows from the left table and matching rows from the right table.
+
+3)RIGHT JOIN – Returns all rows from the right table and matching rows from the left table.
+
+4)FULL OUTER JOIN – Returns all rows from both tables and null for unmatched rows.
+
+1)INNER JOIN
+
+SQL> SELECT b.book_id, b.title, a.name AS author_name
+  2  FROM Books b
+  3  INNER JOIN BookAuthors ba ON b.book_id = ba.book_id
+  4  INNER JOIN Author a ON ba.author_id = a.author_id;
+
+   BOOK_ID TITLE                                                                        
+---------- ---------------------------------------------------------------------------
+         1 Harry Potter                                                                 
+         2 A Brief History of Time                                                      
+
+
+SQL> SELECT l.loan_id, b.title, m.name AS member_name, s.name AS staff_name
+  2  FROM Loans l
+  3  INNER JOIN Books b ON l.book_id = b.book_id
+  4  INNER JOIN Members m ON l.member_id = m.member_id
+  5  INNER JOIN Staff s ON l.staff_id = s.staff_id;
+
+   LOAN_ID TITLE                                                                                        
+---------- -----------------------------------------------------------------------------------------
+         1 Harry Potter                                                                                 
+         2 A Brief History of Time                                                                      
+
+
+2)LEFT JOIN
+
+SQL> SELECT b.book_id, b.title, c.name AS category_name
+  2  FROM Books b
+  3  LEFT JOIN Categories c ON b.category_id = c.category_id;
+
+   BOOK_ID TITLE                                                                        
+---------- ----------------------------------------------------------------------------
+         1 Harry Potter                                                                 
+         2 A Brief History of Time                                                      
+         3 Mystery Book
+
+3)RIGHT JOIN
+
+SQL> SELECT c.category_id, c.name AS category_name, b.title
+  2  FROM Books b
+  3  RIGHT JOIN Categories c ON b.category_id = c.category_id;
+
+CATEGORY_ID CATEGORY_NAME                                      TITLE
+----------- -------------------------------------------------- ----------------------------------
+          1 Fiction                                            Harry Potter
+          2 Science                                            A Brief History of Time
+
+
+4)FULL OUTER JOIN
+
+SQL> SELECT b.book_id, b.title, c.name AS category_name
+  2  FROM Books b
+  3  FULL OUTER JOIN Categories c ON b.category_id = c.category_id;
+
+   BOOK_ID TITLE                                                                                
+---------- ------------------------------------------------------------------------------
+         1 Harry Potter                                                                         
+         2 A Brief History of Time                                                              
+         3 Mystery Book
+
+5)
