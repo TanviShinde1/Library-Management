@@ -1,0 +1,110 @@
+###:Subqueries and Nested Queries
+
+1)Subquery in SELECT
+i)Show each book with total number of author
+
+SQL> SELECT b.book_id, b.title,
+  2         (SELECT COUNT(*) 
+  3          FROM BookAuthors ba 
+  4          WHERE ba.book_id = b.book_id) AS total_authors
+  5  FROM Books b;
+
+   BOOK_ID TITLE                                                                                
+---------- --------------------------------------------------------------------------------
+         1 Harry Potter                                                                         
+         2 A Brief History of Time                                                              
+         3 Mystery Book                                                                         
+
+2)Subquery in WHERE CLAUSE
+
+i)Members who borrowed at least one book in June 2024
+SQL> SELECT name 
+  2  FROM Members
+  3  WHERE member_id IN (
+  4      SELECT DISTINCT member_id 
+  5      FROM Loans
+  6      WHERE issue_date BETWEEN DATE '2024-06-01' AND DATE '2024-06-30'
+  7  );
+
+NAME
+-------------------------------------------------------------------------------
+Bob
+
+SQL> 
+
+ii)Author who have written books in category 1
+
+SQL>  SELECT name 
+  2   FROM Author a
+  3   WHERE EXISTS (
+  4  SELECT 1 
+  5  FROM BookAuthors ba
+  6  JOIN Books b ON ba.book_id = b.book_id
+  7  WHERE ba.author_id = a.author_id
+  8  AND b.category_id = 1);
+
+NAME
+----------------------------------------------------------------------------------------------------
+J.K. Rowling
+
+
+3)Correlated Subquery
+Books that have more than 1 author
+
+
+SQL> SELECT title
+  2  FROM Books b
+  3  WHERE (SELECT COUNT(*) 
+  4         FROM BookAuthors ba 
+  5         WHERE ba.book_id = b.book_id) > 1;
+
+no rows selected
+
+4)Subquery(FROM)
+
+i)Average Duration of borrowed books
+
+SQL> SELECT member_id, ROUND(AVG(days_borrowed), 1) AS avg_days
+  2  FROM (
+  3      SELECT l.member_id, (l.return_date - l.issue_date) AS days_borrowed
+  4      FROM Loans l
+  5      WHERE l.return_date IS NOT NULL
+  6  ) sub
+  7  GROUP BY member_id;
+
+ MEMBER_ID   AVG_DAYS
+---------- ----------
+         1          9
+
+5)NESTED SUBQUERY
+
+i)Members who borrowed the recent loan
+SQL> SELECT name
+  2  FROM Members
+  3  WHERE member_id IN (
+  4      SELECT member_id
+  5      FROM Loans
+  6      WHERE issue_date = (
+  7          SELECT MAX(issue_date) FROM Loans
+  8      )
+  9  );
+
+NAME
+----------------------------------------------------------------------------------------------------
+Bob
+
+ii)
+SQL> SELECT title
+  2  FROM Books
+  3  WHERE book_id IN (
+  4     SELECT book_id
+  5  	FROM Loans
+  6 	WHERE member_id = (
+  7  		SELECT member_id
+  8 	        FROM Members
+  9  		WHERE name = 'Alice'));
+
+TITLE
+----------------------------------------------------------------------------------------------------
+Harry Potter
+
