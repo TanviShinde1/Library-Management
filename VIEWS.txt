@@ -1,0 +1,47 @@
+##Creating Views
+
+1)VIEW BOOK CATEGORY
+SELECT b.book_id, 
+       b.title, 
+       c.name AS category_name
+FROM Books b
+LEFT JOIN Categories c 
+    ON b.category_id = c.category_id;
+
+
+2)USING SIMPLE VIEW-FOR BOOKS IN CATEGORIES
+CREATE VIEW view_books_categories AS
+SELECT b.book_id, b.title, c.name AS category_name
+FROM Books b
+LEFT JOIN Categories c ON b.category_id = c.category_id;
+
+
+
+
+3)View with Multiple Joins
+CREATE VIEW view_loans_details AS
+SELECT l.loan_id, b.title, m.name AS member_name, s.name AS staff_name, 
+       l.issue_date, l.return_date
+FROM Loans l
+JOIN Books b ON l.book_id = b.book_id
+JOIN Members m ON l.member_id = m.member_id
+JOIN Staff s ON l.staff_id = s.staff_id;
+
+
+4)VIEWS WITH AGGREAGATE DATA
+CREATE VIEW view_books_per_category AS
+SELECT c.name AS category_name, COUNT(*) AS total_books
+FROM Books b
+JOIN Categories c ON b.category_id = c.category_id
+GROUP BY c.name;
+
+5)VIEW WITH WHERE CLAUSE
+CREATE VIEW view_recent_loans AS
+SELECT * FROM Loans
+WHERE issue_date >= DATE '2024-06-01'
+WITH CHECK OPTION;
+
+6)DROPPING THE VIEW
+DROP VIEW view_books_categories;
+
+
