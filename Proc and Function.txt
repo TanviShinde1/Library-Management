@@ -1,0 +1,59 @@
+SQL*Plus: Release 10.2.0.1.0 - Production on Sun Aug 17 19:44:35 2025
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.1.0 - Production
+With the Partitioning, OLAP and Data Mining options
+
+SQL> set pages 1000 lines 1000;
+
+1)Stored Procedure-To add new loan
+
+CREATE OR REPLACE PROCEDURE add_new_loan (
+    p_book_id IN NUMBER,
+    p_member_id IN NUMBER,
+    p_staff_id IN NUMBER) AS
+BEGIN
+    INSERT INTO Loans (loan_id, book_id, member_id, staff_id, issue_date)
+    VALUES (loan_seq.NEXTVAL, p_book_id, p_member_id, p_staff_id, SYSDATE);
+    
+    COMMIT;
+END;
+
+
+2)Stored Function – Calculate Loan Duration
+
+CREATE OR REPLACE FUNCTION get_loan_duration (
+    p_loan_id IN NUMBER) RETURN NUMBER AS v_days NUMBER;
+BEGIN
+    SELECT (return_date - issue_date)
+    INTO v_days
+    FROM Loans
+    WHERE loan_id = p_loan_id;
+    RETURN v_days;
+END;
+
+3)Procedure with Conditional Logic
+CREATE OR REPLACE PROCEDURE mark_book_returned (
+    p_loan_id IN NUMBER) AS
+BEGIN
+    UPDATE Loans
+    SET return_date = SYSDATE
+    WHERE loan_id = p_loan_id   AND return_date IS NULL;
+    IF SQL%ROWCOUNT = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('Book already returned or Loan not found.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Book return recorded successfully.');
+    END IF;
+
+    COMMIT;
+END;
+
+
+
+##Stored Procedures:- A stored procedure is like a saved program in the database that performs a set of actions. You can call it whenever you need instead of writing the same SQL again and again.
+
+
+##Stored Functions:- A stored function is similar, but it always returns a value.
